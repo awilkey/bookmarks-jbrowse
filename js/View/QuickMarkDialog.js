@@ -133,13 +133,13 @@ define([
           var openLink = function (link,gen,refl,startl,endl) {
             return function () {
         
-				if(window.JBrowse.config.dataRoot === gen){
+				if(/(.*)\/(.*)/.exec(window.JBrowse.config.dataRoot) === gen){
 					var getTrack = new RegExp('(.*tracks=)([^&]*)(.*)');
                 	var tracks = getTrack.exec(window.location.href);
                 	var oldTracks = tracks[2].split("%2C");
                 	tracks = getTrack.exec(link);
                 	var newTracks = tracks[2].split("%2C");
-
+					
                 	hideTracks(oldTracks);
                 	showTracks(newTracks);
 					var loc = refl+":"+startl+".."+endl;
@@ -154,8 +154,9 @@ define([
 
           for (var i = 0, mleng = store.length; i < mleng; i++) {
             var popre = new RegExp('.*&loc=([^:%]*)[:%3A]*([0-9]*)\\.\\.([0-9]*).*');
-	    var view = popre.exec(store[i].Link);
-            var gen = store[i].Genome;
+	    	var genomere = new RegExp('(.*)\/(.*)');
+			var view = popre.exec(store[i].Link);
+            var gen = genomere.exec(store[i].Genome);
             var loc = view[1];
             var start = view[2];
             var end = view[3];
