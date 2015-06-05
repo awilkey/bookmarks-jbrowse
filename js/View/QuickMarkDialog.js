@@ -132,63 +132,68 @@ define([
 
           var openLink = function (link,gen,refl,startl,endl) {
             return function () {
-        
-				if(/(.*)\/(.*)/.exec(window.JBrowse.config.dataRoot) === gen){
-					var getTrack = new RegExp('(.*tracks=)([^&]*)(.*)');
-                	var tracks = getTrack.exec(window.location.href);
-                	var oldTracks = tracks[2].split("%2C");
-                	tracks = getTrack.exec(link);
-                	var newTracks = tracks[2].split("%2C");
+       			var compare = /(.*)\/?(\w*)?/.exec(window.JBrowse.config.dataRoot); 
+			compare = compare.filter(function(n){return n!=undefined});
+			
+			if(compare[compare.length-1] === gen){
+				var getTrack = new RegExp('(.*tracks=)([^&]*)(.*)');
+                		var tracks = getTrack.exec(window.location.href);
+                		var oldTracks = tracks[2].split("%2C");
+                		tracks = getTrack.exec(link);
+                		var newTracks = tracks[2].split("%2C");
 					
-                	hideTracks(oldTracks);
-                	showTracks(newTracks);
-					var loc = refl+":"+startl+".."+endl;
-					window.JBrowse.navigateTo(loc);
-				} else {
-					window.open(link,"_self");
-				}
+                		hideTracks(oldTracks);
+                		showTracks(newTracks);
+				
+				var loc = refl+":"+startl+".."+endl;
+				window.JBrowse.navigateTo(loc);
+			} else {
+				window.open(link,"_self");
+			}
 
 			};
           };
 
 
           for (var i = 0, mleng = store.length; i < mleng; i++) {
-            var popre = new RegExp('.*&loc=([^:%]*)[:%3A]*([0-9]*)\\.\\.([0-9]*).*');
-	    	var genomere = new RegExp('(.*)\/(.*)');
-			var view = popre.exec(store[i].Link);
-            var gen = genomere.exec(store[i].Genome);
-            var loc = view[1];
-            var start = view[2];
-            var end = view[3];
-            var desc = store[i].Desc;
-            var id = store[i].Id;
-            var link = view[0];
-            var newRow = dojo.create('div', {
-              id: 'match-header' + id,
-              className: 'match-header' + id
-            }, markDiv);
-            var genCol = dojo.create('span', {
-              className: 'matches-generic-match',
-              innerHTML: gen
-            }, newRow);
-            var locCol = dojo.create('span', {
-              className: 'matches-generic-match',
-              innerHTML: loc
-            }, newRow);
-            var startCol = dojo.create('span', {
-              className: 'matches-generic-match',
-              innerHTML: start
-            }, newRow);
-            var endCol = dojo.create('span', {
-              className: 'matches-generic-match',
-              innerHTML: end
-            }, newRow);
-            var descCol = dojo.create('span', {
-              className: 'matches-generic-match',
-              innerHTML: desc
-            }, newRow);
-            dojo.connect(newRow, 'onclick', toggleColor(id));
-            dojo.connect(newRow, 'ondblclick', openLink(link,gen,loc,start,end));
+            	var popre = new RegExp('.*&loc=([^:%]*)[:%3A]*([0-9]*)\\.\\.([0-9]*).*');
+		var view = popre.exec(store[i].Link);
+		var gencomp =/(.*)\/?(\w*)?/.exec(store[i].Genome);
+            	gencomp = gencomp.filter(function(n){return n!=undefined});
+		var gen = gencomp[gencomp.length-1];
+            	var loc = view[1];
+            	var start = view[2];
+            	var end = view[3];
+            	var desc = store[i].Desc;
+            	var id = store[i].Id;
+            	var link = view[0];
+            	var newRow = dojo.create('div', {
+              		id: 'match-header' + id,
+              		className: 'match-header' + id
+            	}, markDiv);
+            	var genCol = dojo.create('span', {
+              		className: 'matches-generic-match',
+              		innerHTML: gen
+            	}, newRow);
+            	var locCol = dojo.create('span', {
+              		className: 'matches-generic-match',
+              		innerHTML: loc
+            	}, newRow);
+            
+		var startCol = dojo.create('span', {
+        	      className: 'matches-generic-match',
+        	      innerHTML: start
+            	}, newRow);
+        	var endCol = dojo.create('span', {
+        	      className: 'matches-generic-match',
+        	      innerHTML: end
+        	}, newRow);
+        	var descCol = dojo.create('span', {
+        	      className: 'matches-generic-match',
+        	      innerHTML: desc
+        	}, newRow);
+        	dojo.connect(newRow, 'onclick', toggleColor(id));
+        	dojo.connect(newRow, 'ondblclick', openLink(link,gen,loc,start,end));
           }
         }
       };
