@@ -1,0 +1,66 @@
+
+#headerDiv{
+    margin-left:auto;
+    margin-right:auto;
+    height: 10em;
+    
+}
+
+.markDescrpit {
+    left: 2em;
+    position: relative;
+}
+
+.control-div{
+	left:.5em;
+	position:relative;
+}
+
+.header-field{
+	padding: 2em;
+	position:inline;
+}
+
+.matches-generic-field {
+	width: 7em;
+	margin-right:0.2em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size: 1.6em
+	background-color: inherit;
+	display: table-cell;
+}
+
+.matches-generic-match{
+    width: 10em;
+    margin-right: 5em;
+    overflow:hidden;
+    text-align: left;
+    text-overflow:ellipsis;
+    display: table-cell;
+}
+
+
+.match-div-header {
+    position:relative;
+    left: 2em;
+    width:49.5em;
+	max-height: 5.5em;
+ 	overflow-Y: scroll;
+    overflow-x:scroll;
+}
+
+div[class*='match-header']{
+    position:static;
+    padding-left = 5em;
+    width: 49.5em;
+}
+
+div[class*='match-header']:hover{
+	background:cornflowerblue;
+}
+
+.matches-generic-match {
+	max-width: 10em;
+	word-break:break-all;
+}
