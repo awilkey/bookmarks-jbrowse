@@ -1,6 +1,7 @@
 define([
   'dojo/_base/lang',
   'dojo/_base/declare',
+  'dojo/_base/array',
   'dojo/dom-construct',
   'dojo/aspect',
   'dijit/Dialog',
@@ -10,7 +11,7 @@ define([
   'dijit/form/Select',
   'JBrowse/View/Dialog/WithActionBar',
   'dojo/domReady!'
-], function (lang, declare, dom, aspect, dijitDialog, focus, dButton, dTextBox, dSelect, ActionBarDialog) {
+], function (lang, declare,array, dom, aspect, dijitDialog, focus, dButton, dTextBox, dSelect, ActionBarDialog) {
   return declare(ActionBarDialog, {
     constructor: function () {
       var thisB = this;
@@ -22,6 +23,7 @@ define([
       });
     },
     _dialogContent: function () {
+	  var myBrowser = this.browser;
       var content = this.content = {};
       var dataRoot = this.dataRoot;
       content.selectedRows = [];
@@ -100,6 +102,56 @@ define([
               window.open(link, '_self');
             };
           };
+
+
+
+          var hideTracks = function(tracklist){
+            var toHide = [];
+            array.forEach(tracklist, lang.hitch(this, function(track){
+                    if (array.indexOf(myBrowser.view.visibleTrackNames(), track) != -1){
+                        toHide.push(myBrowser.trackConfigsByName[track]);
+                    }
+            }));
+
+            myBrowser.publish( '/jbrowse/v1/c/tracks/hide', toHide);
+
+          };
+
+          var showTracks = function(tracklist){
+            var toShow = [];
+
+            array.forEach(tracklist, lang.hitch (this, function(track){
+                if (array.indexOf(myBrowser.view.visibleTrackNames(), track) == -1){
+                    toShow.push(myBrowser.trackConfigsByName[track]);
+                 }
+             }));
+
+            myBrowser.publish( '/jbrowse/v1/c/tracks/show', toShow);
+			myBrowser.publish('/jbrowse/v1/n/tracks/visibleChanged');
+          }
+
+          var openLink = function (link,gen,refl,startl,endl) {
+            return function () {
+        
+				if(window.JBrowse.config.dataRoot === gen){
+					var getTrack = new RegExp('(.*tracks=)([^&]*)(.*)');
+                	var tracks = getTrack.exec(window.location.href);
+                	var oldTracks = tracks[2].split("%2C");
+                	tracks = getTrack.exec(link);
+                	var newTracks = tracks[2].split("%2C");
+
+                	hideTracks(oldTracks);
+                	showTracks(newTracks);
+					var loc = refl+":"+startl+".."+endl;
+					window.JBrowse.navigateTo(loc);
+				} else {
+					window.open(link,"_self");
+				}
+
+			};
+          };
+
+
           for (var i = 0, mleng = store.length; i < mleng; i++) {
             var popre = new RegExp('.*&loc=([^:%]*)[:%3A]*([0-9]*)\\.\\.([0-9]*).*');
 	    var view = popre.exec(store[i].Link);
@@ -135,7 +187,7 @@ define([
               innerHTML: desc
             }, newRow);
             dojo.connect(newRow, 'onclick', toggleColor(id));
-            dojo.connect(newRow, 'ondblclick', openLink(link));
+            dojo.connect(newRow, 'ondblclick', openLink(link,gen,loc,start,end));
           }
         }
       };
