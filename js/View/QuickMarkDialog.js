@@ -132,7 +132,7 @@ define([
 
           var openLink = function (link,gen,refl,startl,endl) {
             return function () {
-       			var compare = /(.*)\/?(\w*)?/.exec(window.JBrowse.config.dataRoot); 
+       			var compare = /([^/]*)(.*\/)?(.*)?$/.exec(window.JBrowse.config.dataRoot); 
 			compare = compare.filter(function(n){return n!=undefined});
 			
 			if(compare[compare.length-1] === gen){
@@ -158,8 +158,9 @@ define([
           for (var i = 0, mleng = store.length; i < mleng; i++) {
             	var popre = new RegExp('.*&loc=([^:%]*)[:%3A]*([0-9]*)\\.\\.([0-9]*).*');
 		var view = popre.exec(store[i].Link);
-		var gencomp =/(.*)\/?(\w*)?/.exec(store[i].Genome);
-            	gencomp = gencomp.filter(function(n){return n!=undefined});
+		var gencomp =/([^/]*)(.*\/)?(.*)?$/.exec(store[i].Genome);
+        console.log(gencomp); 
+		gencomp = gencomp.filter(function(n){return n!=undefined});
 		var gen = gencomp[gencomp.length-1];
             	var loc = view[1];
             	var start = view[2];
