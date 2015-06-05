@@ -16,6 +16,5 @@ Should be compatible with:
 
 ## To Do
 
-* Update window locally on double click - currently reloads the window, this is inefficient.
 * Add support to export/import netscape bookmarks formatted bookmark list
 * Better support for customization
