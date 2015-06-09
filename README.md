@@ -18,3 +18,6 @@ Should be compatible with:
 
 * Add support to export/import netscape bookmarks formatted bookmark list
 * Better support for customization
+
+Development supported by the USDA-ARS, Corn Insects and Crop Genomics Research 
+Unit.
