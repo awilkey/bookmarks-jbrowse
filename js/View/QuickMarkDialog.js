@@ -165,8 +165,9 @@ function (
                     };
 
 
+
                     for (var i = 0, mleng = store.length; i < mleng; i++) {
-                        var popre = new RegExp('.*&loc=([^:%]*)[:%3A]*([0-9]*)\\.\\.([0-9]*).*');
+                        var popre = new RegExp('.*[&?]loc=([^:%]*)[:%3A]*([0-9]*)\\.\\.([0-9]*).*');
                         var view = popre.exec(store[i].Link);
                         var gencomp = /([^/]*)(.*\/)?(.*)?$/.exec(store[i].Genome);
                         console.log(gencomp);
